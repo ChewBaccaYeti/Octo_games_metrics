@@ -19,6 +19,7 @@
     "@types/node": "^22.4.1",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@types/request": "^2.48.12",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
@@ -45,8 +46,12 @@
     "eslint-plugin-n": "^17.10.2",
     "eslint-plugin-promise": "^7.1.0",
     "express": "^4.19.2",
+    "jsdom": "^24.1.1",
+    "playwright": "^1.46.1",
+    "puppeteer": "^23.1.1",
     "qs": "^6.13.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "request": "^2.88.2"
   }
 }

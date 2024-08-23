@@ -1,25 +1,54 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 interface SearchBarProps {
-    onSearch: (game: string) => void;
+    onRedditSearch: (term: string) => void; // Callback для поиска через Reddit
+    onSteamSearch?: (data: any) => void; // Опциональный Callback для поиска через Steam
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
-    const [game, setGame] = useState('');
+const SearchBar: React.FC<SearchBarProps> = ({ onRedditSearch, onSteamSearch }) => {
+    const [searchTerm, setSearchTerm] = useState('');
 
-    const handleSearch = () => {
-        onSearch(game);
+    const handleSearch = async () => {
+        if (onSteamSearch) {
+            try {
+                // Запрос к Steam API через сервер
+                const response = await axios.get(`http://localhost:5000/api/steam-game`, {
+                    params: {
+                        game: searchTerm
+                    }
+                });
+
+                const { parsedGameId, gameName, currentPlayers, followers } = response.data;
+
+                console.log(`ID игры (parsed): ${parsedGameId}`);
+                console.log(`Имя игры: ${gameName}`);
+                console.log(`Игроки: ${currentPlayers}`);
+                console.log(`Подписчики: ${followers}`);
+                // Вызываем коллбек для Steam, если он предоставлен
+                onSteamSearch?.({
+                    parsedGameId,
+                    gameName,
+                    currentPlayers,
+                    followers
+                });
+            } catch (error) {
+                console.error('Ошибка при поиске игры в Steam:', error);
+            }
+        }
+        // Поиск через Reddit API
+        onRedditSearch(searchTerm);
     };
 
     return (
         <div>
             <input
                 type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Roll the dice"
-                value={game}
-                onChange={(e) => setGame(e.target.value)}
             />
-            <button onClick={handleSearch}>Search</button>
+            <button onClick={handleSearch}>Поиск</button>
         </div>
     );
 };

@@ -1,16 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import GameChart from './components/GameCharts';
 import SearchBar from './components/SearchBar';
 import DatePicker from './components/DatePicker';
-import { fetchRedditMentions } from './api/reddit';
+import RedditRender from './components/RedditRender';
+import SteamRender from './components/SteamRender';
+import { fetchRedditMentions, getRedditToken } from './api/redditAPI';
 
 const App: React.FC = () => {
     const [game, setGame] = useState('');
-    const [startDate, setStartDate] = useState('2023-01-01');
-    const [endDate, setEndDate] = useState('2023-12-31');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
     const [mentionsData, setMentionsData] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
+    const [token, setToken] = useState<string | null>(null);
+    const [steamData, setSteamData] = useState<any>(null);
+
+    useEffect(() => {
+        const fetchToken = async () => {
+            try {
+                const fetchedToken = await getRedditToken();
+                setToken(fetchedToken);
+            } catch (error) {
+                console.error('Error fetching token:', error);
+            }
+        };
+
+        fetchToken();
+    }, []);
 
     const handleSearch = async (name: string) => {
         setLoading(true);
@@ -20,21 +36,29 @@ const App: React.FC = () => {
             setMentionsData(mentions || []);
             console.log('Mentions Data:', mentions);
         } catch (error) {
-            console.error('Error fetching Reddit mentions:', error);
+            console.error('Error fetching data:', error);
         } finally {
             setLoading(false);
         }
     };
-
+    
     const handleDateChange = (start: string, end: string) => {
         setStartDate(start);
         setEndDate(end);
-    }
+    };
+
+    const handleSteamSearch = (data: any) => {
+        console.log('Steam Data:', data);
+        setSteamData(data);
+    };
 
     return (
         <div>
             <h1>Game Metrics Dashboard</h1>
-            <SearchBar onSearch={handleSearch} />
+            <SearchBar 
+                onRedditSearch={handleSearch} 
+                onSteamSearch={handleSteamSearch} 
+            />
             <DatePicker onDateChange={handleDateChange} />
             {loading ? (
                 <p>Loading data...</p>
@@ -43,6 +67,12 @@ const App: React.FC = () => {
                     date: post.date,
                     value: 1,
                 }))} />
+            )}
+            {token && (
+                <RedditRender token={token} game={game} startDate={startDate} endDate={endDate} />
+            )}
+            {game && (
+                <SteamRender game={game} startDate={startDate} endDate={endDate} />
             )}
         </div>
     );
