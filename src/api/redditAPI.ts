@@ -38,6 +38,7 @@ export const fetchRedditMentions =
 
             return {
                 date: postDate.toISOString(),
+                author: post.data.author,
                 title: post.data.title,
                 url: `https://www.reddit.com${post.data.permalink}`,
             };

@@ -3,6 +3,7 @@ const axios = require('axios');
 const qs = require('qs');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const { getGameIdByName, fetchSteamData } = require('./steamDB');
 
 const app = express();
 const port = 5000;
@@ -18,6 +19,7 @@ app.post('/api/reddit-token', async (req, res) => {
         const auth = Buffer
             .from(`${process.env.REACT_APP_REDDIT_CLIENT_ID}:${process.env.REACT_APP_REDDIT_CLIENT_SECRET}`)
             .toString('base64');
+        console.log('Encoded Auth:', auth); // для проверки правильности кодирования
 
         const tokenResponse = await axios.post(
             'https://www.reddit.com/api/v1/access_token',
@@ -31,6 +33,8 @@ app.post('/api/reddit-token', async (req, res) => {
                 },
             }
         );
+        console.log('Reddit Access Token:', tokenResponse.data.access_token); // для проверки полученного токена
+
         res.json({ token: tokenResponse.data.access_token });
     } catch (error) {
         console.error('Error fetching Reddit access token:', error);
@@ -71,6 +75,32 @@ app.get('/api/reddit-search', async (req, res) => {
     } catch (error) {
         console.error('Error fetching Reddit mentions:', error);
         res.status(500).send('Error fetching Reddit mentions');
+    }
+});
+
+// Добавляем новый маршрут для поиска данных по игре
+app.get('/api/steam-game', async (req, res) => {
+    const { game } = req.query;
+
+    try {
+        let gameId;
+        if (isNaN(game)) {
+            console.log(`Поиск ID для игры: ${game}`);
+            gameId = await getGameIdByName(game);
+            console.log(`Найден ID игры: ${gameId}`);
+        } else {
+            gameId = game;
+            console.log(`Используется ID игры: ${gameId}`);
+        }
+
+        const gameData = await fetchSteamData(gameId);
+        console.log('Отправка данных на клиент:', gameData);
+        res.set('Content-Type', 'application/json');
+        res.json(gameData);
+
+    } catch (error) {
+        console.error('Error fetching game data:', error);
+        res.status(500).send('Error fetching game data');
     }
 });
 
