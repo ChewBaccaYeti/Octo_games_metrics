@@ -1,100 +1,140 @@
 import React from 'react';
-import { Line } from 'react-chartjs-2';
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-} from 'chart.js';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend
-);
+interface MentionData {
+    date: string;
+    mention: string;
+    link: string;
+    author: string;
+    title: string;
+}
 
 interface GameChartProps {
-    data: { date: string; followers: number }[];
-    mentionsData: { date: string; mention: string; link: string }[];
+    data: { date: string; followers: number; players: number }[];
+    mentionsData: MentionData[];
 }
 
 const GameChart: React.FC<GameChartProps> = ({ data, mentionsData }) => {
-    const chartData = {
-        labels: data.map(item => item.date),
-        datasets: [
+    const validData = data.map(item => {
+        if (!item.date) {
+            console.warn('Invalid Date detected:', item.date);
+            return null;
+        }
+        const formattedDate = new Date(item.date);
+        if (isNaN(formattedDate.getTime())) {
+            console.warn('Invalid Date detected:', item.date);
+            return null;
+        }
+        return {
+            ...item,
+            date: formattedDate.getTime()
+        };
+    }).filter(item => item !== null);
+
+    const validMentionsData = mentionsData.map(item => {
+        if (!item.date) {
+            console.warn('Invalid Date detected:', item.date);
+            return null;
+        }
+        const formattedDate = new Date(item.date);
+        if (isNaN(formattedDate.getTime())) {
+            console.warn('Invalid Date detected:', item.date);
+            return null;
+        }
+        return {
+            ...item,
+            date: formattedDate.getTime(),
+            author: item.author,
+            title: item.title,
+            link: item.link
+        };
+    }).filter(item => item !== null);
+
+    const options: Highcharts.Options = {
+        title: {
+            text: 'Game Metrics'
+        },
+        xAxis: {
+            type: 'datetime',
+            title: {
+                text: 'Date'
+            }
+        },
+        yAxis: [
             {
-                label: 'Followers',
-                data: data.map(item => item.followers),
-                borderColor: 'rgba(75,192,192,1)',
-                backgroundColor: 'rgba(75,192,192,0.5)',
-                fill: false,
-                tension: 0.1,
-                borderWidth: 2,
-                pointRadius: 5,
-                pointBackgroundColor: 'rgba(30, 125, 215, 0.75)',
-                pointBorderColor: 'rgba(0,0,0,1)',
-                pointHoverRadius: 7,
-                pointHoverBackgroundColor: 'rgba(210, 50, 50, 0.9)',
-                pointHoverBorderColor: 'rgba(220,220,220,1)',
-                yAxisID: 'y',
-                type: 'line' as const, // Убедитесь, что тип данных задан как "line"
-            },
-            {
-                label: 'Mentions',
-                data: mentionsData.map(item => ({ x: item.date, y: 0 })), // Используем y: 0, чтобы точки отображались на оси X
-                pointBackgroundColor: 'rgba(255,99,132,1)',
-                pointBorderColor: 'rgba(0,0,0,1)',
-                pointRadius: 5,
-                showLine: false,
-                type: 'scatter' as const, // Явно задаем тип "scatter"
+                title: {
+                    text: 'Number of Followers/Players'
+                }
             }
         ],
-    };
-
-    console.log('Chart Data:', chartData); // Проверка данных
-
-    const options = {
-        scales: {
-            x: {
-                type: 'category' as const,
-                labels: data.map(item => new Date(item.date).toLocaleDateString()), // Форматирование даты
+        series: [
+            {
+                type: 'line',
+                name: 'Followers',
+                data: validData.map(item => [item.date, item.followers]),
+                color: 'rgba(75,192,192,1)',
             },
-            y: {
-                beginAtZero: true,
-                type: 'linear' as const,
-                position: 'left' as const,
+            {
+                type: 'line',
+                name: 'Players',
+                data: validData.map(item => [item.date, item.players]),
+                color: 'rgba(255,99,132,1)',
             },
-        },
-
-        plugins: {
-            tooltip: {
-                callbacks: {
-                    label: function (tooltipItem: any) {
-                        if (tooltipItem.dataset.label === 'Mentions') {
-                            const mention = mentionsData[tooltipItem.dataIndex];
-                            return `${mention.mention} (${mention.date}) - ${mention.link}`;
-                        }
-                        return `${tooltipItem.dataset.label}: ${tooltipItem.formattedValue}`;
-                    },
+            {
+                type: 'scatter',
+                name: 'Mentions',
+                data: validMentionsData.map(item => ({
+                    x: item.date,
+                    y: 0,
+                    link: item.link,
+                    author: item.author,
+                    title: item.title
+                })),
+                color: 'rgba(30, 125, 215, 0.75)',
+                marker: {
+                    symbol: 'square',
+                    radius: 5
                 },
-            },
+            }
+        ],
+        tooltip: {
+            useHTML: true,
+            shared: true,
+            formatter: function () {
+                const xValue = this.x ? new Date(this.x).toUTCString() : 'Unknown Date';
+                let tooltipText = `<b>${xValue}</b><br/>`;
+
+                const point = this.point as any;
+
+                if (point && point.link) {
+                    tooltipText += `<b>Author:</b> ${point.author}<br/>`;
+                    tooltipText += `<b>Title:</b> ${point.title}<br/>`;
+                }
+
+                return tooltipText;
+            }
         },
+        plotOptions: {
+            scatter: {
+                cursor: 'pointer',
+                point: {
+                    events: {
+                        click: function () {
+                            window.open((this as any).link, '_blank');
+                        }
+                    }
+                }
+            }
+        }
     };
 
     return (
         <div>
-            <h2>Game Metrics</h2>
-            <Line data={chartData as any} options={options} />
+            <HighchartsReact highcharts={Highcharts} options={options} />
         </div>
     );
 };
+
 
 export default GameChart;

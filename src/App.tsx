@@ -6,14 +6,22 @@ import RedditRender from './components/RedditRender';
 import SteamRender from './components/SteamRender';
 import { fetchRedditMentions, getRedditToken } from './api/redditAPI';
 
+interface MentionData {
+    date: string;
+    mention: string;
+    link: string;
+    author: string;
+    title: string;
+}
+
 const App: React.FC = () => {
     const [game, setGame] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [mentionsData, setMentionsData] = useState<any[]>([]);
+    const [mentionsData, setMentionsData] = useState<MentionData[]>([]);
     const [loading, setLoading] = useState(false);
     const [token, setToken] = useState<string | null>(null);
-    const [steamData, setSteamData] = useState<any>(null);
+    const [steamData, setSteamData] = useState<any[]>([]);
 
     useEffect(() => {
         const fetchToken = async () => {
@@ -32,9 +40,17 @@ const App: React.FC = () => {
         setLoading(true);
         setGame(name);
         try {
+            // Используем выбранные даты из состояния
             const mentions = await fetchRedditMentions(name, startDate, endDate);
-            setMentionsData(mentions || []);
-            console.log('Mentions Data:', mentions);
+            const formattedMentions: MentionData[] = mentions.map(post => ({
+                date: post.date || '',
+                mention: post.title,
+                link: post.url,
+                author: post.author,
+                title: post.title,
+            }));
+            setMentionsData(formattedMentions);
+            console.log('Mentions Data:', formattedMentions);
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
@@ -45,15 +61,32 @@ const App: React.FC = () => {
     const handleDateChange = (start: string, end: string) => {
         setStartDate(start);
         setEndDate(end);
+        
+        if (game) {
+            handleSearch(game);
+        }
     };
 
     const handleSteamSearch = (data: any) => {
         console.log('Steam Data:', data);
         if (Array.isArray(data)) {
-            setSteamData(data);
+            setSteamData(processData(data));
         } else {
-            setSteamData([data]); // Преобразуем в массив, если это не массив
+            setSteamData(processData([data]));
         }
+    };
+
+    const processData = (data: any[]) => {
+        return data.map(item => {
+            const followers = typeof item.followers === 'string' ? parseInt(item.followers.replace(/,/g, ''), 10) : item.followers;
+            const players = typeof item.players === 'string' ? parseInt(item.players.replace(/,/g, ''), 10) : item.players;
+
+            return {
+                ...item,
+                followers: followers || 0,
+                players: players || 0
+            };
+        });
     };
 
     return (
@@ -64,26 +97,29 @@ const App: React.FC = () => {
                 onSteamSearch={handleSteamSearch}
             />
             <DatePicker onDateChange={handleDateChange} />
+            {game && (
+                <SteamRender game={game} startDate={startDate} endDate={endDate} />
+            )}
             {loading ? (
                 <p>Loading data...</p>
             ) : (
                 <GameChart
-                    data={steamData ? steamData.map((item: any) => ({
-                        date: item.date,
-                        followers: Number(item.followers.replace(/,/g, ''))
-                    })) : []}
-                    mentionsData={mentionsData.map(post => ({
-                        date: post.date,
-                        mention: post.title,
-                        link: post.link,
+                    data={steamData.map((item: any) => ({
+                        date: item.date || '',
+                        followers: item.followers,
+                        players: item.players
                     }))}
+                    mentionsData={mentionsData}
                 />
             )}
             {token && (
-                <RedditRender token={token} game={game} startDate={startDate} endDate={endDate} />
-            )}
-            {game && (
-                <SteamRender game={game} startDate={startDate} endDate={endDate} />
+                <RedditRender 
+                    token={token} 
+                    game={game} 
+                    startDate={startDate} 
+                    endDate={endDate}
+                    onMentionsDataChange={setMentionsData} 
+                />
             )}
         </div>
     );

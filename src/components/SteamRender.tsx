@@ -14,7 +14,7 @@ interface SteamData {
     followers: string;
 }
 
-const SteamRender: React.FC<SteamRenderProps> = ({ game, startDate, endDate }) => {
+const SteamRender: React.FC<SteamRenderProps> = ({ game }) => {
     const [steamData, setSteamData] = useState<SteamData | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -26,26 +26,9 @@ const SteamRender: React.FC<SteamRenderProps> = ({ game, startDate, endDate }) =
                 setError(null);
     
                 const response = await axios.get(`http://localhost:5000/api/steam-game`, {
-                    // headers: {
-                    //     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-                    //     'Accept-Encoding': 'gzip, deflate, br, zstd',
-                    //     'Accept-Language': 'en-US,en;q=0.9',
-                    //     'Cache-Control': 'max-age=0',
-                    //     'Connection': 'keep-alive',
-                    //     'Host': 'steamdb.info',
-                    //     'Referer': 'https://steamdb.info/',
-                    //     'Sec-Fetch-Dest': 'document',
-                    //     'Sec-Fetch-Mode': 'navigate',
-                    //     'Sec-Fetch-Site': 'same-origin',
-                    //     'Sec-Fetch-User': '?1',
-                    //     'Upgrade-Insecure-Requests': '1',
-                    //     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
-                    // },
                     params: { game }
                 });
-    
-                console.log('Steam API response:', response.data); // Добавленный лог для проверки данных
-    
+        
                 if (response.data.error) {
                     setError(response.data.error);
                 } else {
@@ -54,12 +37,12 @@ const SteamRender: React.FC<SteamRenderProps> = ({ game, startDate, endDate }) =
                 }
                 setLoading(false);
             } catch (err) {
-                console.error('Error fetching Steam data:', err); // Лог ошибки
+                console.error('Error fetching Steam data:', err);
                 setError('Ошибка при получении данных со Steam');
                 setLoading(false);
             }
         };
-    
+
         if (game) {
             fetchSteamData();
         }

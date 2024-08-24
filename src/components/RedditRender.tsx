@@ -7,6 +7,7 @@ interface RedditPost {
         title: string;
         selftext: string;
         permalink: string;
+        created_utc: number;
     };
 }
 
@@ -15,9 +16,18 @@ interface RedditPostsProps {
     game: string;
     startDate: string;
     endDate: string;
+    onMentionsDataChange: (mentionsData: MentionData[]) => void; // добавьте этот пропс
 }
 
-const RedditPosts: React.FC<RedditPostsProps> = ({ token, game, startDate, endDate }) => {
+interface MentionData {
+    date: string;
+    mention: string;
+    link: string;
+    author: string;
+    title: string;
+}
+
+const RedditPosts: React.FC<RedditPostsProps> = ({ token, game, startDate, endDate, onMentionsDataChange }) => {
     const [posts, setPosts] = useState<RedditPost[]>([]);
 
     useEffect(() => {
@@ -31,8 +41,17 @@ const RedditPosts: React.FC<RedditPostsProps> = ({ token, game, startDate, endDa
                         endDate,
                     },
                 });
-                console.log('Reddit API Response Data:', response.data);
                 setPosts(response.data.data.children); // Сохраняем посты в состоянии
+                // Преобразование данных для графика
+                const mentionsData = response.data.data.children.map((post: any) => ({
+                    date: new Date(post.data.created_utc * 1000).toISOString(),
+                    mention: post.data.title,
+                    link: `https://www.reddit.com${post.data.permalink}`,
+                    author: post.data.author,
+                    title: post.data.title
+                }));
+                // Передаем данные наверх
+                onMentionsDataChange(mentionsData);
             } catch (error) {
                 console.error('Error fetching posts from Reddit:', error);
             }
