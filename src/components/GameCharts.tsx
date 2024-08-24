@@ -1,53 +1,100 @@
-import React, { useEffect, useRef } from 'react';
-import * as d3 from 'd3';
+import React from 'react';
+import { Line } from 'react-chartjs-2';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+);
 
 interface GameChartProps {
-    data: Array<{ date: string; value: number }>;
+    data: { date: string; followers: number }[];
+    mentionsData: { date: string; mention: string; link: string }[];
 }
 
-const GameChart: React.FC<GameChartProps> = ({ data }) => {
-    const ref = useRef<SVGSVGElement | null>(null);
+const GameChart: React.FC<GameChartProps> = ({ data, mentionsData }) => {
+    const chartData = {
+        labels: data.map(item => item.date),
+        datasets: [
+            {
+                label: 'Followers',
+                data: data.map(item => item.followers),
+                borderColor: 'rgba(75,192,192,1)',
+                backgroundColor: 'rgba(75,192,192,0.5)',
+                fill: false,
+                tension: 0.1,
+                borderWidth: 2,
+                pointRadius: 5,
+                pointBackgroundColor: 'rgba(30, 125, 215, 0.75)',
+                pointBorderColor: 'rgba(0,0,0,1)',
+                pointHoverRadius: 7,
+                pointHoverBackgroundColor: 'rgba(210, 50, 50, 0.9)',
+                pointHoverBorderColor: 'rgba(220,220,220,1)',
+                yAxisID: 'y',
+                type: 'line' as const, // Убедитесь, что тип данных задан как "line"
+            },
+            {
+                label: 'Mentions',
+                data: mentionsData.map(item => ({ x: item.date, y: 0 })), // Используем y: 0, чтобы точки отображались на оси X
+                pointBackgroundColor: 'rgba(255,99,132,1)',
+                pointBorderColor: 'rgba(0,0,0,1)',
+                pointRadius: 5,
+                showLine: false,
+                type: 'scatter' as const, // Явно задаем тип "scatter"
+            }
+        ],
+    };
 
-    useEffect(() => {
-        if (!data || data.length === 0) return;
+    console.log('Chart Data:', chartData); // Проверка данных
 
-        const svg = d3.select(ref.current);
-        svg.selectAll('*').remove(); // Очищаем предыдущие графики
+    const options = {
+        scales: {
+            x: {
+                type: 'category' as const,
+                labels: data.map(item => new Date(item.date).toLocaleDateString()), // Форматирование даты
+            },
+            y: {
+                beginAtZero: true,
+                type: 'linear' as const,
+                position: 'left' as const,
+            },
+        },
 
-        const margin = { top: 20, right: 30, bottom: 30, left: 40 };
-        const width = 800 - margin.left - margin.right;
-        const height = 400 - margin.top - margin.bottom;
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function (tooltipItem: any) {
+                        if (tooltipItem.dataset.label === 'Mentions') {
+                            const mention = mentionsData[tooltipItem.dataIndex];
+                            return `${mention.mention} (${mention.date}) - ${mention.link}`;
+                        }
+                        return `${tooltipItem.dataset.label}: ${tooltipItem.formattedValue}`;
+                    },
+                },
+            },
+        },
+    };
 
-        const x = d3.scaleTime()
-            .domain(d3.extent(data, d => new Date(d.date)) as [Date, Date])
-            .range([0, width]);
-
-        const y = d3.scaleLinear()
-            .domain([0, d3.max(data, d => d.value) as number])
-            .range([height, 0]);
-
-        const line = d3.line<{ date: string; value: number }>()
-            .x(d => x(new Date(d.date)))
-            .y(d => y(d.value));
-
-        svg.append('g')
-            .attr('transform', `translate(${margin.left},${margin.top})`)
-            .call(d3.axisLeft(y));
-
-        svg.append('g')
-            .attr('transform', `translate(${margin.left},${height + margin.top})`)
-            .call(d3.axisBottom(x));
-
-        svg.append('path')
-            .datum(data)
-            .attr('transform', `translate(${margin.left},${margin.top})`)
-            .attr('fill', 'none')
-            .attr('stroke', 'steelblue')
-            .attr('stroke-width', 1.5)
-            .attr('d', line);
-    }, [data]);
-
-    return <svg ref={ref} width={800} height={400}></svg>;
+    return (
+        <div>
+            <h2>Game Metrics</h2>
+            <Line data={chartData as any} options={options} />
+        </div>
+    );
 };
 
 export default GameChart;

@@ -24,7 +24,7 @@ async function getGameIdByName(gameName) {
         console.error(`Ошибка при поиске игры: ${error}`);
         throw error;
     }
-}
+};
 
 async function fetchSteamData(gameId) {
     const url = `https://steamdb.info/app/${gameId}/charts/`;
@@ -52,23 +52,17 @@ async function fetchSteamData(gameId) {
     try {
         const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
-
         // Устанавливаем заголовки
         await page.setExtraHTTPHeaders(headers);
-
         // Переходим на нужную страницу
         await page.goto(url);
-
         // Ждем пока все данные загрузятся
         await page.waitForSelector('h1[itemprop="name"]');
         console.log('Страница загружена, начинаем парсинг данных.');
-
         // Получение HTML страницы
         const content = await page.content();
-
         // Закрытие браузера
         await browser.close();
-
         // Обработка содержимого страницы
         return parseBody(content, gameId);
 
@@ -76,7 +70,7 @@ async function fetchSteamData(gameId) {
         console.error(`Ошибка при загрузке страницы: ${error}`);
         throw error;
     }
-}
+};
 
 function parseBody(html, passedGameId) {
     const $ = cheerio.load(html);
@@ -89,7 +83,7 @@ function parseBody(html, passedGameId) {
     const followers = $('ul.app-chart-numbers li strong').first().text().trim();
 
     const gameData = {
-        parsedGameId,
+        gameId: parsedGameId,
         gameName,
         currentPlayers,
         followers
@@ -102,7 +96,7 @@ function parseBody(html, passedGameId) {
     console.log('Данные об игре:', gameData);
 
     return gameData;
-}
+};
 
 // Получение аргумента (названия или ID игры) из командной строки
 const userInput = process.argv[2]; // Используем второй аргумент как название или ID игры
@@ -110,7 +104,7 @@ const userInput = process.argv[2]; // Используем второй аргу
 if (!userInput) {
     console.error('Пожалуйста, укажите название или ID игры в качестве аргумента.');
     process.exit(1);
-}
+};
 
 (async () => {
     try {

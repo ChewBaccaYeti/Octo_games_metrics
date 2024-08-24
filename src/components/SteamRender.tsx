@@ -8,6 +8,7 @@ interface SteamRenderProps {
 }
 
 interface SteamData {
+    gameId: string;
     gameName: string;
     currentPlayers: string;
     followers: string;
@@ -44,7 +45,6 @@ const SteamRender: React.FC<SteamRenderProps> = ({ game, startDate, endDate }) =
                 });
     
                 console.log('Steam API response:', response.data); // Добавленный лог для проверки данных
-                console.log(steamData?.gameName, steamData?.currentPlayers, steamData?.followers);
     
                 if (response.data.error) {
                     setError(response.data.error);
@@ -78,6 +78,7 @@ const SteamRender: React.FC<SteamRenderProps> = ({ game, startDate, endDate }) =
         steamData && (
             <div>
                 <h2>Steam Data for {steamData.gameName}</h2>
+                <p><strong>Идентификатор игры:</strong> {steamData.gameId}</p>
                 <p><strong>Текущее количество игроков:</strong> {steamData.currentPlayers}</p>
                 <p><strong>Подписчики:</strong> {steamData.followers}</p>
             </div>

@@ -41,7 +41,7 @@ const App: React.FC = () => {
             setLoading(false);
         }
     };
-    
+
     const handleDateChange = (start: string, end: string) => {
         setStartDate(start);
         setEndDate(end);
@@ -49,24 +49,35 @@ const App: React.FC = () => {
 
     const handleSteamSearch = (data: any) => {
         console.log('Steam Data:', data);
-        setSteamData(data);
+        if (Array.isArray(data)) {
+            setSteamData(data);
+        } else {
+            setSteamData([data]); // Преобразуем в массив, если это не массив
+        }
     };
 
     return (
         <div>
             <h1>Game Metrics Dashboard</h1>
-            <SearchBar 
-                onRedditSearch={handleSearch} 
-                onSteamSearch={handleSteamSearch} 
+            <SearchBar
+                onRedditSearch={handleSearch}
+                onSteamSearch={handleSteamSearch}
             />
             <DatePicker onDateChange={handleDateChange} />
             {loading ? (
                 <p>Loading data...</p>
             ) : (
-                <GameChart data={mentionsData.map(post => ({
-                    date: post.date,
-                    value: 1,
-                }))} />
+                <GameChart
+                    data={steamData ? steamData.map((item: any) => ({
+                        date: item.date,
+                        followers: Number(item.followers.replace(/,/g, ''))
+                    })) : []}
+                    mentionsData={mentionsData.map(post => ({
+                        date: post.date,
+                        mention: post.title,
+                        link: post.link,
+                    }))}
+                />
             )}
             {token && (
                 <RedditRender token={token} game={game} startDate={startDate} endDate={endDate} />
