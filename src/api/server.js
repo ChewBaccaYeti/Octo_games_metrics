@@ -43,11 +43,11 @@ app.post('/api/reddit-token', async (req, res) => {
 });
 
 app.get('/api/reddit-search', async (req, res) => {
-    const { token, game, startDate, endDate } = req.query;
-    const after = Math.floor(new Date(startDate).getTime() / 1000);
-    const before = Math.floor(new Date(endDate).getTime() / 1000);
+    const { token, game, startDate, endDate, limit = 100, after = null } = req.query; // Получаем параметры limit и after
+    const afterTimestamp = Math.floor(new Date(startDate).getTime() / 1000);
+    const beforeTimestamp = Math.floor(new Date(endDate).getTime() / 1000);
 
-    console.log(`Start Date (after): ${after}, End Date (before): ${before}`);
+    console.log(`Start Date (after): ${afterTimestamp}, End Date (before): ${beforeTimestamp}`);
     console.log(`Searching for game: ${game} from ${startDate} to ${endDate}`);
 
     const query = qs.stringify({
@@ -55,8 +55,10 @@ app.get('/api/reddit-search', async (req, res) => {
         restrict_sr: true,
         sort: 'new',
         t: 'all',
-        after,
-        before
+        after: afterTimestamp,
+        before: beforeTimestamp,
+        limit, // Добавляем параметр limit
+        after // Добавляем параметр after для пагинации
     });
 
     console.log(`Reddit API Query: ${query}`);

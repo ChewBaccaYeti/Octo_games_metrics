@@ -37,14 +37,32 @@ const RedditPosts: React.FC<RedditPostsProps> = ({ token, game, startDate, endDa
 
     return (
         <div>
-            <h2>Reddit Posts about {game}</h2>
-            <ul>
+            <h2 style={{ textAlign: 'center', color: 'rgba(255,99,132,1)', fontSize: '24px', marginBottom: '20px' }}>
+                Reddit Posts about {game}</h2>
+            <ul
+                style={{ listStyleType: 'none', }}
+            >
                 {posts.map((post, index) => (
-                    <li key={index}>
+                    <li 
+                        key={index}
+                        style={{ 
+                            border: '3px solid #ddd', 
+                            borderRadius: '8px', 
+                            padding: '15px', 
+                            marginBottom: '15px', 
+                            backgroundColor: '#f0f0f0', 
+                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.05)'
+                        }}
+                    >
                         <strong>Author:</strong> {post.data.author} <br />
                         <strong>Title:</strong> {post.data.title} <br />
                         <strong>Selftext:</strong> {post.data.selftext ? post.data.selftext : 'No content'} <br />
-                        <a href={`https://www.reddit.com${post.data.permalink}`} target="_blank" rel="noopener noreferrer">View on Reddit</a>
+                        <a 
+                            href={`https://www.reddit.com${post.data.permalink}`} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            style={{ color: '#1e7dd7', textDecoration: 'none', fontWeight: 'bold' }}
+                        >View on Reddit</a>
                     </li>
                 ))}
             </ul>

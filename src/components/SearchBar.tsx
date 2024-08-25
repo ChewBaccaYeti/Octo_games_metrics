@@ -37,14 +37,15 @@ const SearchBar: React.FC<SearchBarProps> = ({ onRedditSearch, onSteamSearch }) 
     };
 
     return (
-        <div>
+        <div style={{ marginBottom: '20px', padding: '10px', border: '1px solid #ccc', borderRadius: '5px', backgroundColor: '#f0f0f0' }}>
             <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Roll the dice"
+                style={{ marginRight: '10px' }}
             />
-            <button onClick={handleSearch}>Поиск</button>
+            <button onClick={handleSearch} style={{ padding: '5px 10px' }}>Пошук</button>
         </div>
     );
 };

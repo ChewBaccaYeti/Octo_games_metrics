@@ -15,18 +15,20 @@ const DatePicker: React.FC<DatePickerProps> = ({ onDateChange }) => {
     };
 
     return (
-        <div>
+        <div style={{ marginBottom: '20px', padding: '10px', border: '1px solid #ccc', borderRadius: '5px', backgroundColor: '#f0f0f0', gap: '10px' }}>
             <input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
+                style={{ marginRight: '10px' }}
             />
             <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
+                style={{ marginRight: '10px' }}
             />
-            <button onClick={handleDateChange}>Set Period</button>
+            <button onClick={handleDateChange} style={{ padding: '5px 10px', }}>Встановити період</button>
         </div>
     );
 };

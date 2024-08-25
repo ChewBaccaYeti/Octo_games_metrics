@@ -47,11 +47,13 @@ const SteamRender: React.FC<SteamRenderProps> = ({ game }) => {
 
     return (
         steamData && (
-            <div>
-                <h2>Steam Data for {steamData.gameName}</h2>
-                <p><strong>Идентификатор игры:</strong> {steamData.gameId}</p>
-                <p><strong>Текущее количество игроков:</strong> {steamData.currentPlayers}</p>
-                <p><strong>Подписчики:</strong> {steamData.followers}</p>
+            <div style={{ padding: '20px', backgroundColor: '#f0f0f0', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+            <h2 style={{ textAlign: 'center', color: '#3498db', marginBottom: '15px' }}>
+                Steam Data for {steamData.gameName}
+            </h2>
+                <p><strong>Ідентифікатор гри:</strong> {steamData.gameId}</p>
+                <p><strong>Поточна кількість гравців:</strong> {steamData.currentPlayers}</p>
+                <p><strong>Підписники гри:</strong> {steamData.followers}</p>
             </div>
         )
     );

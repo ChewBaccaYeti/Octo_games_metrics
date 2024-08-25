@@ -44,12 +44,15 @@ const GameChart: React.FC<GameChartProps> = ({ data, mentionsData }) => {
         })
         .filter(item => item !== null) as MentionData[];
 
-    // Убедитесь, что followersData также фильтруется на наличие допустимых значений
+    // followersData также фильтруется на наличие допустимых значений
     const followersData = validData.map(item => [item.date, item.followers] as [number, number]);
 
     const mentionsWithFollowers = findClosestFollowerCount(validMentionsData, followersData);
 
     const options: Highcharts.Options = {
+        chart: {
+            backgroundColor: '#f0f0f0', 
+        },
         title: { text: 'Game Metrics' },
         xAxis: { type: 'datetime', title: { text: 'Date' } },
         yAxis: [{ title: { text: 'Number of Followers/Players' } }],
@@ -77,9 +80,21 @@ const GameChart: React.FC<GameChartProps> = ({ data, mentionsData }) => {
                     title: item.title
                 })),
                 color: 'rgba(30, 125, 215, 0.75)',
+                lineWidth: 1,
                 marker: {
                     symbol: 'square',
-                    radius: 5
+                    radius: 5,
+                    fillColor: 'rgba(30, 125, 215, 0.75)',
+                    lineWidth: 1,
+                    lineColor: '#1e7dd7',
+                    states: {
+                        hover: {
+                            enabled: true,
+                            lineWidth: 2,
+                            lineWidthPlus: 1,
+                            lineColor: '#1e7dd7',
+                        },
+                    }
                 },
             }
         ],
@@ -102,11 +117,19 @@ const GameChart: React.FC<GameChartProps> = ({ data, mentionsData }) => {
         },
         plotOptions: {
             scatter: {
+                lineWidth: 1,
                 cursor: 'pointer',
                 point: {
                     events: {
                         click: function () {
                             window.open((this as any).link, '_blank');
+                        }
+                    }
+                },
+                marker: {
+                    states: {
+                        hover: {
+                            enabled: true,
                         }
                     }
                 }
