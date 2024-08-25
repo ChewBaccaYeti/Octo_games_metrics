@@ -1,31 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
-interface RedditPost {
-    data: {
-        author: string;
-        title: string;
-        selftext: string;
-        permalink: string;
-        created_utc: number;
-    };
-}
-
-interface RedditPostsProps {
-    token: string | null;
-    game: string;
-    startDate: string;
-    endDate: string;
-    onMentionsDataChange: (mentionsData: MentionData[]) => void; // добавьте этот пропс
-}
-
-interface MentionData {
-    date: string;
-    mention: string;
-    link: string;
-    author: string;
-    title: string;
-}
+import { RedditPost, RedditPostsProps } from '../types';
 
 const RedditPosts: React.FC<RedditPostsProps> = ({ token, game, startDate, endDate, onMentionsDataChange }) => {
     const [posts, setPosts] = useState<RedditPost[]>([]);

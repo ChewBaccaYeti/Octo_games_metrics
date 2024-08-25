@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
-interface SearchBarProps {
-    onRedditSearch: (term: string) => void; // Callback для поиска через Reddit
-    onSteamSearch?: (data: any) => void; // Опциональный Callback для поиска через Steam
-}
+import { SearchBarProps } from '../types';
 
 const SearchBar: React.FC<SearchBarProps> = ({ onRedditSearch, onSteamSearch }) => {
     const [searchTerm, setSearchTerm] = useState('');

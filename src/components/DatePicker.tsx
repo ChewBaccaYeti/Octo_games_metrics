@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
 import moment from 'moment';
-
-interface DatePickerProps {
-    onDateChange: (startDate: string, endDate: string) => void;
-}
+import { DatePickerProps } from '../types';
 
 const DatePicker: React.FC<DatePickerProps> = ({ onDateChange }) => {
     const [startDate, setStartDate] = useState<string>('');
     const [endDate, setEndDate] = useState<string>('');
 
     const handleDateChange = () => {
-        // moment для форматирования дат
         const frmt = 'YYYY-MM-DD';
         const formattedStartDate = moment(startDate).format(frmt);
         const formattedEndDate = moment(endDate).format(frmt);

@@ -1,18 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
-interface SteamRenderProps {
-    game: string;
-    startDate: string;
-    endDate: string;
-}
-
-interface SteamData {
-    gameId: string;
-    gameName: string;
-    currentPlayers: string;
-    followers: string;
-}
+import { SteamData, SteamRenderProps } from '../types';
 
 const SteamRender: React.FC<SteamRenderProps> = ({ game }) => {
     const [steamData, setSteamData] = useState<SteamData | null>(null);
