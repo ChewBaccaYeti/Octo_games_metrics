@@ -42,7 +42,7 @@ const RedditPosts = ({ token, game, startDate, endDate, onMentionsDataChange }) 
     (0, react_1.useEffect)(() => {
         const fetchPosts = () => __awaiter(void 0, void 0, void 0, function* () {
             try {
-                const response = yield axios_1.default.get('http://localhost:5000/api/reddit-search', {
+                const response = yield axios_1.default.get('/api/reddit-search', {
                     params: {
                         token,
                         game,
