@@ -2,7 +2,19 @@
     "version": 2,
     "builds": [
         {
-            "src": "api/**/*.js",
+            "src": "api/reddit-search.js",
+            "use": "@vercel/node"
+        },
+        {
+            "src": "api/reddit-token.js",
+            "use": "@vercel/node"
+        },
+        {
+            "src": "api/steam-game.js",
+            "use": "@vercel/node"
+        },
+        {
+            "src": "api/server.js",
             "use": "@vercel/node"
         },
         {
@@ -12,8 +24,20 @@
     ],
     "routes": [
         {
+            "src": "/api/reddit-search",
+            "dest": "api/reddit-search.js"
+        },
+        {
+            "src": "/api/reddit-token",
+            "dest": "api/reddit-token.js"
+        },
+        {
+            "src": "/api/steam-game",
+            "dest": "api/steam-game.js"
+        },
+        {
             "src": "/api/(.*)",
-            "dest": "/api/$1"
+            "dest": "api/server.js"
         },
         {
             "src": "/(.*)",
