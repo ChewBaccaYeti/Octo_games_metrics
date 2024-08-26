@@ -11,11 +11,7 @@ const MY_APP = 'Octo_games_metrics';
 
 dotenv.config();
 
-app.use(cors({
-    origin: 'https://octo-games-metrics-cuhp.vercel.app',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(cors());
 app.use(express.json());
 
 app.post('/api/reddit-token', async (req, res) => {
