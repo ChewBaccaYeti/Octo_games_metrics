@@ -1,4 +1,7 @@
+import dotenv from 'dotenv';
 import { getGameIdByName, fetchSteamData } from './steamDB';
+
+dotenv.config();
 
 export default async (req, res) => {
     const { game } = req.query;

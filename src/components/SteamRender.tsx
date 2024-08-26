@@ -13,7 +13,7 @@ const SteamRender: React.FC<SteamRenderProps> = ({ game }) => {
                 setLoading(true);
                 setError(null);
     
-                const response = await axios.get(`http://localhost:5000/api/steam-game`, {
+                const response = await axios.get(`/api/steam-game`, {
                     params: { game }
                 });
         

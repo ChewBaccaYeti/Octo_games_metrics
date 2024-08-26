@@ -9,7 +9,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onRedditSearch, onSteamSearch }) 
         if (onSteamSearch) {
             try {
                 // Запрос к Steam API через сервер
-                const response = await axios.get(`http://localhost:5000/api/steam-game`, {
+                const response = await axios.get(`/api/steam-game`, {
                     params: {
                         game: searchTerm
                     }

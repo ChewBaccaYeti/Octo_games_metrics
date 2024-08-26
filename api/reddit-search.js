@@ -1,5 +1,10 @@
 import axios from 'axios';
 import qs from 'qs';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const MY_APP = 'Octo_games_metrics';
 
 export default async (req, res) => {
     const { token, game, startDate, endDate, limit = 100, after = null } = req.query;
@@ -21,7 +26,7 @@ export default async (req, res) => {
         const response = await axios.get(`https://oauth.reddit.com/r/gaming/search.json?${query}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
-                'User-Agent': 'Octo_games_metrics',
+                'User-Agent': MY_APP, // Используем переменную MY_APP
             },
         });
 

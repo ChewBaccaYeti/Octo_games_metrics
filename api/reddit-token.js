@@ -1,5 +1,8 @@
 import axios from 'axios';
 import qs from 'qs';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export default async (req, res) => {
     try {

@@ -43,7 +43,7 @@ const SearchBar = ({ onRedditSearch, onSteamSearch }) => {
         if (onSteamSearch) {
             try {
                 // Запрос к Steam API через сервер
-                const response = yield axios_1.default.get(`http://localhost:5000/api/steam-game`, {
+                const response = yield axios_1.default.get(`/api/steam-game`, {
                     params: {
                         game: searchTerm
                     }

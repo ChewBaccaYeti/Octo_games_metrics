@@ -46,7 +46,7 @@ const SteamRender = ({ game }) => {
             try {
                 setLoading(true);
                 setError(null);
-                const response = yield axios_1.default.get(`http://localhost:5000/api/steam-game`, {
+                const response = yield axios_1.default.get(`/api/steam-game`, {
                     params: { game }
                 });
                 if (response.data.error) {
