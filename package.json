@@ -32,7 +32,11 @@
     "typescript": "^5.5.4",
     "webpack": "^5.93.0",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.4"
+    "webpack-dev-server": "^5.0.4",
+    "axios": "^1.7.4",
+    "qs": "^6.13.0",
+    "express": "^4.19.2",
+    "dotenv": "^16.4.5"
   },
   "dependencies": {
     "@types/express": "^4.17.21",
