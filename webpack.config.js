@@ -5,6 +5,8 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+const isDevelopment = process.env.NODE_ENV !== 'production';
+
 module.exports = {
     entry: './src/index.tsx',
     output: {
@@ -38,14 +40,16 @@ module.exports = {
         },
         compress: true,
         port: 9000,
-        proxy: [
-            {
-                context: ['/api'],
-                target: 'http://localhost:5000',
-                changeOrigin: true,
-                pathRewrite: { '^/api': '' },
-                secure: false,
-            },
-        ],
+        proxy: isDevelopment
+            ? [
+                {
+                    context: ['/api'],
+                    target: 'http://localhost:5000', // прокси только для локальной разработки
+                    changeOrigin: true,
+                    pathRewrite: { '^/api': '' },
+                    secure: false,
+                },
+            ]
+            : undefined, // Нет прокси для продакшн-среды
     },
 };

@@ -13,14 +13,13 @@ export const findClosestFollowerCount = (
 ) => {
     return mentionsData.map(mention => {
         const mentionDate = new Date(mention.date).getTime();
-
         // Проверяем, что followersData не пустой массив
         if (followersData.length === 0) {
             console.warn('Followers data is empty, returning mention with default followers count.');
             return {
                 ...mention,
                 date: mentionDate,  // дата в виде Unix timestamp
-                followers: 0,       // или другое значение по умолчанию
+                followers: 0, // или другое значение по умолчанию
             };
         }
 
@@ -49,7 +48,7 @@ const App: React.FC = () => {
     useEffect(() => {
         const fetchToken = async () => {
             try {
-                const response = await axios.post('http://localhost:5000/api/reddit-token');
+                const response = await axios.post('/api/reddit-token');
                 setToken(response.data.token);
             } catch (error) {
                 console.error('Error fetching token:', error);
@@ -64,7 +63,7 @@ const App: React.FC = () => {
         setGame(name);
         try {
             // Используем выбранные даты из состояния
-            const response = await axios.get('http://localhost:5000/api/reddit-search', {
+            const response = await axios.get('/api/reddit-search', {
                 params: {
                     token,
                     game: name,
@@ -96,7 +95,7 @@ const App: React.FC = () => {
 
     const fetchSteamFollowersData = async (gameName: string) => {
         try {
-            const response = await axios.get('http://localhost:5000/api/steam-game', {
+            const response = await axios.get('/api/steam-game', {
                 params: { game: gameName },
             });
     
