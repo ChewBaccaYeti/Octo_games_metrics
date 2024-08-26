@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack serve --mode development",
     "build": " tsc && webpack --mode production",
-    "server": "nodemon src/api/server.js",
+    "server": "nodemon api/server.js",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx}'"
   },
