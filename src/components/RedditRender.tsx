@@ -8,7 +8,7 @@ const RedditPosts: React.FC<RedditPostsProps> = ({ token, game, startDate, endDa
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/reddit-search', {
+                const response = await axios.get('/api/reddit-search', {
                     params: {
                         token,
                         game,
