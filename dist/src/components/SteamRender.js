@@ -41,12 +41,13 @@ const SteamRender = ({ game }) => {
     const [steamData, setSteamData] = (0, react_1.useState)(null);
     const [loading, setLoading] = (0, react_1.useState)(true);
     const [error, setError] = (0, react_1.useState)(null);
+    const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://octo-games-metrics.vercel.app' : 'http://localhost:5000';
     (0, react_1.useEffect)(() => {
         const fetchSteamData = () => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 setLoading(true);
                 setError(null);
-                const response = yield axios_1.default.get(`/api/steam-game`, {
+                const response = yield axios_1.default.get(`${API_BASE_URL}/api/steam-game`, {
                     params: { game }
                 });
                 if (response.data.error) {

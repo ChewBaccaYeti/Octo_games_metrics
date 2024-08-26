@@ -45,10 +45,12 @@ const App: React.FC = () => {
     const [token, setToken] = useState<string | null>(null);
     const [steamData, setSteamData] = useState<FollowerData[]>([]);
 
+    const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://octo-games-metrics.vercel.app' : 'http://localhost:5000';
+
     useEffect(() => {
         const fetchToken = async () => {
             try {
-                const response = await axios.post('/api/reddit-token');
+                const response = await axios.post(`${API_BASE_URL}/api/reddit-token`);
                 setToken(response.data.token);
             } catch (error) {
                 console.error('Error fetching token:', error);
@@ -63,7 +65,7 @@ const App: React.FC = () => {
         setGame(name);
         try {
             // Используем выбранные даты из состояния
-            const response = await axios.get('/api/reddit-search', {
+            const response = await axios.get(`${API_BASE_URL}/api/reddit-search`, {
                 params: {
                     token,
                     game: name,
@@ -95,7 +97,7 @@ const App: React.FC = () => {
 
     const fetchSteamFollowersData = async (gameName: string) => {
         try {
-            const response = await axios.get('/api/steam-game', {
+            const response = await axios.get(`${API_BASE_URL}/api/steam-game`, {
                 params: { game: gameName },
             });
     

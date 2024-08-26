@@ -39,10 +39,11 @@ const react_1 = __importStar(require("react"));
 const axios_1 = __importDefault(require("axios"));
 const RedditPosts = ({ token, game, startDate, endDate, onMentionsDataChange }) => {
     const [posts, setPosts] = (0, react_1.useState)([]);
+    const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://octo-games-metrics.vercel.app' : 'http://localhost:5000';
     (0, react_1.useEffect)(() => {
         const fetchPosts = () => __awaiter(void 0, void 0, void 0, function* () {
             try {
-                const response = yield axios_1.default.get('/api/reddit-search', {
+                const response = yield axios_1.default.get(`${API_BASE_URL}/api/reddit-search`, {
                     params: {
                         token,
                         game,

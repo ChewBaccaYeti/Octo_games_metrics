@@ -5,10 +5,12 @@ import { RedditPost, RedditPostsProps } from '../types';
 const RedditPosts: React.FC<RedditPostsProps> = ({ token, game, startDate, endDate, onMentionsDataChange }) => {
     const [posts, setPosts] = useState<RedditPost[]>([]);
 
+    const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://octo-games-metrics.vercel.app' : 'http://localhost:5000';
+
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await axios.get('/api/reddit-search', {
+                const response = await axios.get(`${API_BASE_URL}/api/reddit-search`, {
                     params: {
                         token,
                         game,

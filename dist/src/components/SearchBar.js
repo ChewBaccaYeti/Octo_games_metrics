@@ -39,11 +39,12 @@ const react_1 = __importStar(require("react"));
 const axios_1 = __importDefault(require("axios"));
 const SearchBar = ({ onRedditSearch, onSteamSearch }) => {
     const [searchTerm, setSearchTerm] = (0, react_1.useState)('');
+    const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://octo-games-metrics.vercel.app' : 'http://localhost:5000';
     const handleSearch = () => __awaiter(void 0, void 0, void 0, function* () {
         if (onSteamSearch) {
             try {
                 // Запрос к Steam API через сервер
-                const response = yield axios_1.default.get(`/api/steam-game`, {
+                const response = yield axios_1.default.get(`${API_BASE_URL}/api/steam-game`, {
                     params: {
                         game: searchTerm
                     }

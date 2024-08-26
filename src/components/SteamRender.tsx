@@ -7,13 +7,15 @@ const SteamRender: React.FC<SteamRenderProps> = ({ game }) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
+    const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://octo-games-metrics.vercel.app' : 'http://localhost:5000';
+
     useEffect(() => {
         const fetchSteamData = async () => {
             try {
                 setLoading(true);
                 setError(null);
     
-                const response = await axios.get(`/api/steam-game`, {
+                const response = await axios.get(`${API_BASE_URL}/api/steam-game`, {
                     params: { game }
                 });
         

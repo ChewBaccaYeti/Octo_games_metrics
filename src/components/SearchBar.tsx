@@ -5,11 +5,14 @@ import { SearchBarProps } from '../types';
 const SearchBar: React.FC<SearchBarProps> = ({ onRedditSearch, onSteamSearch }) => {
     const [searchTerm, setSearchTerm] = useState('');
 
+    const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://octo-games-metrics.vercel.app' : 'http://localhost:5000';
+
+
     const handleSearch = async () => {
         if (onSteamSearch) {
             try {
                 // Запрос к Steam API через сервер
-                const response = await axios.get(`/api/steam-game`, {
+                const response = await axios.get(`${API_BASE_URL}/api/steam-game`, {
                     params: {
                         game: searchTerm
                     }

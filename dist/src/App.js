@@ -67,10 +67,11 @@ const App = () => {
     const [loading, setLoading] = (0, react_1.useState)(false);
     const [token, setToken] = (0, react_1.useState)(null);
     const [steamData, setSteamData] = (0, react_1.useState)([]);
+    const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://octo-games-metrics.vercel.app' : 'http://localhost:5000';
     (0, react_1.useEffect)(() => {
         const fetchToken = () => __awaiter(void 0, void 0, void 0, function* () {
             try {
-                const response = yield axios_1.default.post('/api/reddit-token');
+                const response = yield axios_1.default.post(`${API_BASE_URL}/api/reddit-token`);
                 setToken(response.data.token);
             }
             catch (error) {
@@ -84,7 +85,7 @@ const App = () => {
         setGame(name);
         try {
             // Используем выбранные даты из состояния
-            const response = yield axios_1.default.get('/api/reddit-search', {
+            const response = yield axios_1.default.get(`${API_BASE_URL}/api/reddit-search`, {
                 params: {
                     token,
                     game: name,
@@ -113,7 +114,7 @@ const App = () => {
     });
     const fetchSteamFollowersData = (gameName) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const response = yield axios_1.default.get('/api/steam-game', {
+            const response = yield axios_1.default.get(`${API_BASE_URL}/api/steam-game`, {
                 params: { game: gameName },
             });
             const followers = response.data.followers;

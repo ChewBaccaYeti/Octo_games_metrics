@@ -14,10 +14,6 @@
             "use": "@vercel/node"
         },
         {
-            "src": "api/server.js",
-            "use": "@vercel/node"
-        },
-        {
             "src": "dist/**",
             "use": "@vercel/static"
         }
@@ -34,10 +30,6 @@
         {
             "src": "/api/steam-game",
             "dest": "api/steam-game.js"
-        },
-        {
-            "src": "/api/(.*)",
-            "dest": "api/server.js"
         },
         {
             "src": "/(.*)",
