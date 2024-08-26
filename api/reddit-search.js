@@ -1,8 +1,11 @@
 import axios from 'axios';
 import qs from 'qs';
-import dotenv from 'dotenv';
 
-dotenv.config();
+// Условная загрузка dotenv только в dev-среде
+if (process.env.NODE_ENV !== 'production') {
+    const dotenv = require('dotenv');
+    dotenv.config();
+}
 
 const MY_APP = process.env.MY_APP || 'Octo_games_metrics';
 
