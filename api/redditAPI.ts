@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 
 export const getRedditToken = async () => {
-    const response = await axios.post('http://localhost:5000/api/reddit-token');
+    const response = await axios.post('/api/reddit-token');
     return response.data.token;
 };
 
@@ -17,7 +17,7 @@ export const fetchRedditMentions = async (
 
     try {
         do {
-            const response: AxiosResponse<any> = await axios.get('http://localhost:5000/api/reddit-search', {
+            const response: AxiosResponse<any> = await axios.get('/api/reddit-search', {
                 params: {
                     token,
                     game,

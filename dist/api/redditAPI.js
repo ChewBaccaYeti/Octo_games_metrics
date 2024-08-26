@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchRedditMentions = exports.getRedditToken = void 0;
 const axios_1 = __importDefault(require("axios"));
 const getRedditToken = () => __awaiter(void 0, void 0, void 0, function* () {
-    const response = yield axios_1.default.post('http://localhost:5000/api/reddit-token');
+    const response = yield axios_1.default.post('/api/reddit-token');
     return response.data.token;
 });
 exports.getRedditToken = getRedditToken;
@@ -26,7 +26,7 @@ const fetchRedditMentions = (game_1, startDate_1, endDate_1, ...args_1) => __awa
     let after = null;
     try {
         do {
-            const response = yield axios_1.default.get('http://localhost:5000/api/reddit-search', {
+            const response = yield axios_1.default.get('/api/reddit-search', {
                 params: {
                     token,
                     game,
