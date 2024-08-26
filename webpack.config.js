@@ -41,7 +41,7 @@ module.exports = {
         proxy: [
             {
                 context: ['/api'],
-                target: 'https://oauth.reddit.com',
+                target: 'http://localhost:5000',
                 changeOrigin: true,
                 pathRewrite: { '^/api': '' },
                 secure: false,
