@@ -1,6 +1,5 @@
 import { getGameIdByName, fetchSteamData } from './steamDB';
 
-// Условная загрузка dotenv только в dev-среде
 if (process.env.NODE_ENV !== 'production') {
     const dotenv = require('dotenv');
     dotenv.config();
