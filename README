@@ -1,0 +1,32 @@
+Octo Games Metrics
+This repository provides a tool to scrape game data from SteamDB and Reddit. It collects information about game subscribers, player counts, game names, and their identifiers from SteamDB. Additionally, it fetches mentions of the game from Reddit using the Reddit API. All this data is visualized in a chart for easy analysis.
+
+To get started, clone the repository and install the necessary dependencies:
+
+git clone https://github.com/ChewBaccaYeti/Octo_games_metrics.git
+
+cd Octo_games_metrics
+
+npm install
+
+Usage
+Start Proxy Server
+The proxy server is used to fetch data from SteamDB and Reddit. To start the proxy server, run the following command:
+
+npm run server
+
+This will start the server on localhost:5000.
+
+Start Local Development Environment
+Once the proxy server is running, you can start the local development environment:
+
+npm start
+
+This command will start the webpack development server on localhost:9000. You can now view the dashboard in your browser.
+
+Technologies Used
+Node.js: For backend server and proxy server handling.
+Webpack: For bundling the front-end assets.
+SteamDB API: For scraping game data like subscribers, player counts, and game identifiers.
+Reddit API: For fetching mentions and posts related to the game.
+Highcharts: For visualizing the data in charts.
